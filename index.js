@@ -37,7 +37,7 @@ function start(websocketServerLocation) {
     try {
       let message = JSON.parse(data);
       message = `\n${JSON.stringify(message)}`;
-      writeFile(message);
+      writeFile("data.txt", message);
     } catch (e) {
       writeFileError("error.log", `\n${e.toString()}`);
     }
