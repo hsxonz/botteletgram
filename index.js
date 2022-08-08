@@ -10,6 +10,13 @@ const writeFileError = (file, data) => {
   });
 };
 
+const writeFile = (file, data) => {
+  fs.writeFile(file, data, function (err) {
+    if (err) {
+      errorMessage += `\n${err.toString()}`;
+    }
+  });
+};
 function start(websocketServerLocation) {
   let ws = new WebSocket(websocketServerLocation);
 
@@ -30,7 +37,7 @@ function start(websocketServerLocation) {
     try {
       let message = JSON.parse(data);
       message = `\n${JSON.stringify(message)}`;
-      logUpdate(message);
+      writeFile(message);
     } catch (e) {
       writeFileError("error.log", `\n${e.toString()}`);
     }
