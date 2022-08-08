@@ -1,7 +1,9 @@
 import WebSocket from "ws";
-import logUpdate from "log-update";
+import TelegramBot from "node-telegram-bot-api";
 import fs from "fs";
 
+const token = "5553721098:AAG9WpET3-NplQqFXf_PGoss66G_MqPR2mo";
+const bot = new TelegramBot(token, { polling: true });
 const writeFileError = (file, data) => {
   fs.appendFile(file, data, function (err) {
     if (err) {
@@ -37,7 +39,7 @@ function start(websocketServerLocation) {
     try {
       let message = JSON.parse(data);
       message = `\n${JSON.stringify(message)}`;
-      writeFile("data.txt", message);
+      writeFile("data.log", message);
     } catch (e) {
       writeFileError("error.log", `\n${e.toString()}`);
     }
@@ -53,3 +55,14 @@ function start(websocketServerLocation) {
 }
 
 start("wss://stream.binance.com:9443/ws");
+bot.onText(/\/start (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const resp = match[1];
+
+  bot.sendMessage(chatId, resp);
+});
+
+bot.on("message", (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, "Received your message");
+});
